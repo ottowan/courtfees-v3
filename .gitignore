@@ -1,0 +1,9 @@
+node_modules
+dist
+_legacy_unused
+pkg
+/client/log
+/client/cert
+/client/config.js
+/client/node_modules
+/src/cert

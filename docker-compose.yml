@@ -1,0 +1,21 @@
+services:
+  courtfees-v3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: courtfees-v3
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - courtfees-v3-net
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://127.0.0.1:80/"]
+      interval: 30s
+      timeout: 3s
+      start_period: 5s
+      retries: 3
+
+networks:
+  courtfees-v3-net:
+    driver: bridge

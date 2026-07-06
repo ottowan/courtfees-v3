@@ -11,15 +11,18 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Serve with nginx
-FROM nginx:1.27-alpine
+# Serve static build
+FROM node:20-alpine
 
-COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /app
 
-EXPOSE 80
+RUN npm install -g serve
+
+COPY --from=builder /app/dist ./dist
+
+EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s \
-  CMD wget -q -O- http://127.0.0.1:80/ >/dev/null 2>&1 || exit 1
+  CMD wget -q -O- http://127.0.0.1:3000/ >/dev/null 2>&1 || exit 1
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["serve", "-s", "dist", "-l", "3000"]
